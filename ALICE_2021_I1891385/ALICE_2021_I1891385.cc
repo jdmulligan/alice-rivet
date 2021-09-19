@@ -22,7 +22,7 @@ namespace Rivet {
         
       // Measurement parameters to loop over
       alpha_list = {1.0, 1.5, 2.0, 3.0};
-      R_list = {0.2, 0.4};
+      R_list = {0.4, 0.2};
       pt_bins = {20, 40, 60, 80, 100};
 
       // Initialise and register projections
@@ -34,21 +34,25 @@ namespace Rivet {
       declare(FastJets(fs, FastJets::ANTIKT, 0.4), "JetsAK4");
 
       // Book histograms
-      for (int pt_bin=0; pt_bin<n_pt_bins; pt_bin++) {
-        for (auto R : R_list) {
-          for (auto alpha : alpha_list) {
+      for (unsigned int R_bin=0; R_bin < R_list.size(); R_bin++) {
+        for (unsigned int pt_bin=0; pt_bin < pt_bins.size()-1; pt_bin++) {
+          for (unsigned int alpha_bin=0; alpha_bin < alpha_list.size(); alpha_bin++) {
+
+            float R = R_list[R_bin];
+            float alpha = alpha_list[alpha_bin];
+
             string hname = hname_string(pt_bin, R, alpha);
             string hname_SD = hname + "_SD";
-            book(_h[hname], hname, 20, 0.0, 1.0);
-            book(_h[hname_SD], hname_SD, 20, 0.0, 1.0);
-              
-            // TODO: take binning from reference data using HEPData ID (digits in "d01-x01-y01" etc.)
-            // book(_h["angR02"], 1, 1, 1);
-            // book(_h["angR04"], 2, 1, 1);
-              
-            // book(_h_Table1, 1,1,1);
-            // book(_h_Table2, 2,1,1);
-            // book(_h_Table3, 3,1,1);
+
+            // Take binning from reference data using HEPData ID
+            // Rivet allows this by specifying the three integers in e.g. "d25-x01-y01")
+            int index_ungroomed = hname_index(pt_bin, R_bin, alpha_bin, false);
+            int index_groomed = hname_index(pt_bin, R_bin, alpha_bin, true);
+            //printf("index=%d (pt=%d, R=%f, a=%f, ungroomed\n", index_ungroomed, pt_bin, R, alpha);
+            //printf("index=%d (pt=%d, R=%f, a=%f, groomed\n", index_groomed, pt_bin, R, alpha);
+            book(_h[hname], index_ungroomed, 1, 1);
+            book(_h[hname_SD], index_groomed, 1, 1);
+
           }
         }
       }
@@ -66,7 +70,7 @@ namespace Rivet {
       //skip the event if there are no useful jets inside
       if (fjR02.empty() && fjR04.empty()) vetoEvent;
         
-      for (int pt_bin=0; pt_bin<n_pt_bins; pt_bin++) {
+      for (unsigned int pt_bin=0; pt_bin<pt_bins.size()-1; pt_bin++) {
         for (auto alpha : alpha_list) {
           fill_jet_histograms(fjR02, 0.2, alpha, pt_bin);
           fill_jet_histograms(fjR04, 0.4, alpha, pt_bin);
@@ -124,9 +128,10 @@ namespace Rivet {
     /// Normalise histograms etc., after the run
     void finalize() {
 
-      // Normalize ungroomed angularities to unity
-      // TODO: Normalize groomed angularities to SD tagged fraction
-      for (int pt_bin=0; pt_bin<n_pt_bins; pt_bin++) {
+      //  Normalize angularities to unity
+      // Note: this is correct even for the groomed angularities, since in HEPData we include
+      //       the untagged bin as a negative bin
+      for (unsigned int pt_bin=0; pt_bin<pt_bins.size()-1; pt_bin++) {
         for (auto R : R_list) {
           for (auto alpha : alpha_list) {
             string hname = hname_string(pt_bin, R, alpha);
@@ -144,6 +149,18 @@ namespace Rivet {
         return "ang_R" + to_string(R) + "_alpha" + to_string(alpha) + "_pt" + to_string(pt_bin);
     }
 
+    /// Get index of HEPData histogram
+    int hname_index(int pt_bin, int R_bin, int alpha_bin, bool groomed) {
+        int base_index = 32*R_bin + 8*pt_bin + alpha_bin + 1;
+        if (groomed) {
+          return base_index+4;
+        }
+        else {
+          return base_index;
+        }
+    }
+
+
     ///@}
 
 
@@ -153,8 +170,7 @@ namespace Rivet {
     ///@}
 
   private:
-    float _jetetamax = 0.9;
-    int n_pt_bins = 4;
+    float _jetetamax = 0.9;  
     vector<float> pt_bins;
     vector<float> R_list;
     vector<float> alpha_list;
