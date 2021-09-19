@@ -1,10 +1,10 @@
-Name: ALICE_2020_angularity
-Year: <Insert year of publication>
-Summary: <A one-line informative ALICE_2020_angularity headline>
-Experiment: <Insert the experiment name>
-Collider: <Insert the collider name>
-InspireID: <Insert the Inspire ID>
-Status: UNVALIDATED NOTREENTRY NOHEPDATA SINGLEWEIGHT UNPHYSICAL
+Name: ALICE_2021_I1891385
+Year: 2021
+Summary: <A one-line informative ALICE_2021_I1891385 headline>
+Experiment: ALICE
+Collider: LHC
+InspireID: 1891385
+Status: UNVALIDATED NOHEPDATA SINGLEWEIGHT UNPHYSICAL
 Authors:
  - Your Name <your@email.address>
 References:

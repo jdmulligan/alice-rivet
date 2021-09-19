@@ -8,11 +8,11 @@
 namespace Rivet {
 
   /// @brief Add a short analysis description here
-  class ALICE_2021_angularity : public Analysis {
+  class ALICE_2021_I1891385 : public Analysis {
   public:
 
     /// Constructor
-    DEFAULT_RIVET_ANALYSIS_CTOR(ALICE_2021_angularity);
+    DEFAULT_RIVET_ANALYSIS_CTOR(ALICE_2021_I1891385);
 
     /// @name Analysis methods
     ///@{
@@ -160,6 +160,6 @@ namespace Rivet {
     vector<float> alpha_list;
   };
 
-  DECLARE_RIVET_PLUGIN(ALICE_2021_angularity);
+  DECLARE_RIVET_PLUGIN(ALICE_2021_I1891385);
 
 }

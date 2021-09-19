@@ -1,4 +1,4 @@
-BEGIN PLOT /ALICE_2020_angularity/d01-x01-y01
+BEGIN PLOT /ALICE_2021_I1891385/d01-x01-y01
 Title=[Insert title for histogram d01-x01-y01 here]
 XLabel=[Insert $x$-axis label for histogram d01-x01-y01 here]
 YLabel=[Insert $y$-axis label for histogram d01-x01-y01 here]
