@@ -2,7 +2,7 @@
 
 Each of our proton-proton jet analyses should contribute a [Rivet](https://rivet.hepforge.org) routine, 
 which allows MC generators to be easily compared to our experimental results and used for tuning.
-Rivet is built around [HEPData](https://www.hepdata.net) for experimental data, and the HEPMC event format
+Rivet is built around [HEPData](https://www.hepdata.net) for experimental data, and the [HEPMC](http://hepmc.web.cern.ch/hepmc/) event format
 for MC generators. Rivet uses an internal data format called [yoda](https://yoda.hepforge.org) 
 and (annoyingly) uses its own histogramming rather than ROOT or python. 
 You can find helpful documentation on the [Rivet Gitlab](https://gitlab.com/hepcedar/rivet/-/tree/master/doc/tutorials)
