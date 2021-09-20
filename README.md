@@ -8,7 +8,7 @@ and (annoyingly) uses its own histogramming rather than ROOT or python.
 You can find helpful documentation on the [Rivet Gitlab](https://gitlab.com/hepcedar/rivet/-/tree/master/doc/tutorials)
 or [ALICE tutorial](https://alice-doc.github.io/alice-analysis-tutorial/rivet/rivet-tutorial.html).
 
-There are two steps to contribute each new analysis into Rivet:
+There are two steps to contribute each new analysis into the [Rivet repository](https://rivet.hepforge.org/rivet-coverage):
 1. Write a Rivet routine for our analysis.
 2. Validate our analysis against an MC sample, and get it approved by ALICE.
 
