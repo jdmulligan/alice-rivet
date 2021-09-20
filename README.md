@@ -42,7 +42,9 @@ To run over a single file:
 rivet --pwd -a ALICE_2021_I1891385 -n 1000 -o Rivet.yoda /home/alice-rivet/generators/herwig/LHC_5020_MPI-S985111.hepmc
 rivet-mkhtml --pwd Rivet.yoda
 ```
-To run over multiple files, assume you have a script `validate.sh` that runs over N single files in parallel and produces 
+To run over multiple files, you can run over many single files and then 
+[merge](https://gitlab.com/hepcedar/rivet/-/blob/master/doc/tutorials/merging.md) the output before plotting.
+Assume you have a script `validate.sh` that runs over N single files in parallel and produces 
 N output files `Rivet1.yoda, Rivet2.yoda, ..., RivetN.yoda`:
 ```
 ./validate.sh
