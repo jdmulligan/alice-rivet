@@ -5,7 +5,7 @@ which allows MC generators to be easily compared to our experimental results and
 Rivet is built around [HEPData](https://www.hepdata.net) for experimental data, and the HEPMC event format
 for MC generators. Rivet uses an internal data format called [yoda](https://yoda.hepforge.org) 
 and (annoyingly) uses its own histogramming rather than ROOT or python. 
-You can find helpful documentation on the [Rivet Gitlab](https://gitlab.com/hepcedar/rivet)
+You can find helpful documentation on the [Rivet Gitlab](https://gitlab.com/hepcedar/rivet/-/tree/master/doc/tutorials)
 or [ALICE tutorial](https://alice-doc.github.io/alice-analysis-tutorial/rivet/rivet-tutorial.html).
 
 There are two steps to contribute each new analysis into Rivet:
