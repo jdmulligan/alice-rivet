@@ -94,32 +94,43 @@ namespace Rivet {
         if ((jet.abseta()<_jetetamax-R) && (jet.perp()>min_pt) && (jet.perp()<max_pt))
         {
           // Ungroomed angularity
-          _h[hname]->fill(angularity(jet, R, alpha));
+          _h[hname]->fill(ungroomed_angularity(jet, R, alpha));
             
           // Groomed angularity
           float zcut = 0.2;
           float beta = 0.;
           fastjet::contrib::SoftDrop sd(beta, zcut);
           const PseudoJet& jet_sd = sd(jet);
-          if (jet_sd.constituents().size() > 1) { // Passed grooming condition
-            _h[hname_SD]->fill(angularity(jet_sd, R, alpha));
-          }
-          else{ // Fill negative value if untagged jet
-            _h[hname_SD]->fill(-1e-3);
-          }
+          _h[hname_SD]->fill(groomed_angularity(jet, jet_sd, R, alpha));
 
         }
       }
     }
         
-    ///Compute angularity
-    float angularity(const PseudoJet& jet, float R, float alpha) {
+    /// Compute angularity
+    float ungroomed_angularity(const PseudoJet& jet, float R, float alpha) {
       float lambda = 0;
       for (const PseudoJet& p : jet.constituents()) {
         float lambda_i = p.perp() * pow(deltaR(p, jet)/R, alpha);
         lambda += lambda_i/jet.perp();
       }
       return lambda;
+    }
+
+    /// Compute groomed angularity
+    float groomed_angularity(const PseudoJet& jet, const PseudoJet& jet_sd, float R, float alpha) {
+
+      if (jet_sd.constituents().size() > 1) { // Passed grooming condition
+        float lambda = 0;
+        for (const PseudoJet& p : jet_sd.constituents()) {
+          float lambda_i = p.perp() * pow(deltaR(p, jet)/R, alpha);
+          lambda += lambda_i/jet.perp();
+        }
+        return lambda;
+      }
+      else { // Fill negative value if untagged jet
+        return -1e-3;
+      }
     }
     
     float deltaR(PseudoJet j1, PseudoJet j2) {
