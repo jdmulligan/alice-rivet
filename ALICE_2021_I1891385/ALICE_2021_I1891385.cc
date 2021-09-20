@@ -101,51 +101,21 @@ namespace Rivet {
           float beta = 0.;
           fastjet::contrib::SoftDrop sd(beta, zcut);
           const PseudoJet& jet_sd = sd(jet);
-
-          float lambda = 0;
-          for (const PseudoJet& sd_p : jet_sd.constituents()){
-            float lambda_i = sd_p.perp() * pow(deltaR(sd_p, jet)/R, alpha);
-            lambda += lambda_i/jet_sd.perp();
-          }
-
           if (jet_sd.constituents().size() > 1) { // Passed grooming condition
-            _h[hname_SD]->fill(lambda);
+            _h[hname_SD]->fill(angularity(jet_sd, R, alpha));
           }
           else{ // Fill negative value if untagged jet
             _h[hname_SD]->fill(-1e-3);
           }
-
-          /*
-          // Try an alternate method, since somehow the groomed jet seems not to contain its constituents...
-          // To get the groomed jet constituents, iterate through the Lund Declustering objects
-          fastjet::contrib::LundGenerator lund_gen(JetDefinition(fastjet::JetAlgorithm::cambridge_algorithm, R));
-          std::vector<fastjet::contrib::LundDeclustering> lund_splits = lund_gen.result(jet);
-
-          fastjet::contrib::LundDeclustering* result = nullptr;
-          for (unsigned int i=0; i < lund_splits.size(); i++) {
-            if (lund_splits[i].z() > zcut * pow(lund_splits[i].Delta() / R, beta)) {
-              result = &lund_splits[i];
-              break;
-            }
-          }
-
-          float ang = -1e-3; // Fill negative value if untagged jet
-          if (result) { // Passed grooming condition
-            const PseudoJet& jet_SD = result->pair();
-            ang = angularity(jet_SD, R, alpha);
-            std::cout << "ang: " << ang << std::endl;
-          }
-          _h[hname_SD]->fill(ang);
-          */
 
         }
       }
     }
         
     ///Compute angularity
-    float angularity(const Jet& jet, float R, float alpha) {
+    float angularity(const PseudoJet& jet, float R, float alpha) {
       float lambda = 0;
-      for (auto p : jet.constituents()) {
+      for (const PseudoJet& p : jet.constituents()) {
         float lambda_i = p.perp() * pow(deltaR(p, jet)/R, alpha);
         lambda += lambda_i/jet.perp();
       }
