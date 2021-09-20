@@ -4,6 +4,7 @@
 #include "Rivet/Projections/FastJets.hh"
 
 #include "fastjet/contrib/SoftDrop.hh"
+#include "fastjet/contrib/LundGenerator.hh"
 
 namespace Rivet {
 
@@ -98,13 +99,45 @@ namespace Rivet {
           // Groomed angularity
           float zcut = 0.2;
           float beta = 0.;
-          ClusterSequence cs_CA(jet.constituents(), JetDefinition(fastjet::cambridge_algorithm, R));
-          PseudoJets jets_CA = sorted_by_pt(cs_CA.inclusive_jets());
-          if (jets_CA.size() > 0) {
-            fastjet::contrib::SoftDrop sd(beta, zcut);
-            PseudoJet jet_SD = sd(jets_CA[0]);
-            _h[hname_SD]->fill(angularity(jet_SD, R, alpha));
+          fastjet::contrib::SoftDrop sd(beta, zcut);
+          const PseudoJet& jet_sd = sd(jet);
+
+          float lambda = 0;
+          for (const PseudoJet& sd_p : jet_sd.constituents()){
+            float lambda_i = sd_p.perp() * pow(deltaR(sd_p, jet)/R, alpha);
+            lambda += lambda_i/jet_sd.perp();
           }
+
+          if (jet_sd.constituents().size() > 1) { // Passed grooming condition
+            _h[hname_SD]->fill(lambda);
+          }
+          else{ // Fill negative value if untagged jet
+            _h[hname_SD]->fill(-1e-3);
+          }
+
+          /*
+          // Try an alternate method, since somehow the groomed jet seems not to contain its constituents...
+          // To get the groomed jet constituents, iterate through the Lund Declustering objects
+          fastjet::contrib::LundGenerator lund_gen(JetDefinition(fastjet::JetAlgorithm::cambridge_algorithm, R));
+          std::vector<fastjet::contrib::LundDeclustering> lund_splits = lund_gen.result(jet);
+
+          fastjet::contrib::LundDeclustering* result = nullptr;
+          for (unsigned int i=0; i < lund_splits.size(); i++) {
+            if (lund_splits[i].z() > zcut * pow(lund_splits[i].Delta() / R, beta)) {
+              result = &lund_splits[i];
+              break;
+            }
+          }
+
+          float ang = -1e-3; // Fill negative value if untagged jet
+          if (result) { // Passed grooming condition
+            const PseudoJet& jet_SD = result->pair();
+            ang = angularity(jet_SD, R, alpha);
+            std::cout << "ang: " << ang << std::endl;
+          }
+          _h[hname_SD]->fill(ang);
+          */
+
         }
       }
     }
@@ -128,7 +161,7 @@ namespace Rivet {
     /// Normalise histograms etc., after the run
     void finalize() {
 
-      //  Normalize angularities to unity
+      // Normalize angularities to unity
       // Note: this is correct even for the groomed angularities, since in HEPData we include
       //       the untagged bin as a negative bin
       for (unsigned int pt_bin=0; pt_bin<pt_bins.size()-1; pt_bin++) {
