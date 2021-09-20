@@ -39,6 +39,9 @@ rivet-build RivetALICE_2021_I1891385.so ALICE_2021_I1891385.cc
 ```
 
 ### Run over MC events and plot
+You should first copy the HEPMC files that you want to run over into the `alice-rivet` repository, so that the docker image can see them.
+Here, as an example, we run over a herwig file.
+
 To run over a single file:
 ```
 rivet --pwd -a ALICE_2021_I1891385 -n 1000 -o Rivet.yoda /home/alice-rivet/generators/herwig/LHC_5020_MPI-S985111.hepmc
