@@ -31,7 +31,7 @@ Edit the `.cc` file to write your `init()`, `analyze()`, `finalize()` functions.
 ### Build your analysis
 Enter docker:
 ```
-docker run -it -v /homes/james/alice-rivet:/home/alice-rivet/ hepstore/rivet:3.1.4
+docker run -it -v /home/james/alice-rivet:/home/alice-rivet/ hepstore/rivet:3.1.4
 ```
 Then `cd` to your folder and build:
 ```
@@ -39,8 +39,8 @@ rivet-build RivetALICE_2021_I1891385.so ALICE_2021_I1891385.cc
 ```
 
 ### Run over MC events and plot
-You should first copy the HEPMC files that you want to run over into the `alice-rivet` repository, so that the docker image can see them.
-Here, as an example, we run over a herwig file.
+You should first copy the HEPMC file that you want to run over into the `alice-rivet` repository, so that the docker image can see it.
+Here, as an example, we run over a herwig file. Alternately, you could also mount `/rstorage` with an extra `-v /rstorage/generators:/home/generators` in the `docker run` command above.
 
 To run over a single file:
 ```
