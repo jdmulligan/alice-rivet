@@ -22,6 +22,7 @@ rivet-mkanalysis ALICE_2021_I1891385
 ```
 This command will create several files, including yoda automatically generated from the HEPData entry.
 Note that if your analysis is not officially in HEPData, you can upload your submission to the sandbox and download it in yoda format.
+In the `.yoda` and `.info` files, you should also should replace all instances of `RIVET_ANALYSIS_NAME` to your analysis name.
 
 ### Write your routine
 Edit the `.cc` file to write your `init()`, `analyze()`, `finalize()` functions.
