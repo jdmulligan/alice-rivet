@@ -111,7 +111,7 @@ namespace Rivet {
     float ungroomed_angularity(const PseudoJet& jet, float R, float alpha) {
       float lambda = 0;
       for (const PseudoJet& p : jet.constituents()) {
-        float lambda_i = p.perp() * pow(deltaR(p, jet)/R, alpha);
+        float lambda_i = p.perp() * pow(p.delta_R(jet)/R, alpha);
         lambda += lambda_i/jet.perp();
       }
       return lambda;
@@ -123,7 +123,7 @@ namespace Rivet {
       if (jet_sd.constituents().size() > 1) { // Passed grooming condition
         float lambda = 0;
         for (const PseudoJet& p : jet_sd.constituents()) {
-          float lambda_i = p.perp() * pow(deltaR(p, jet)/R, alpha);
+          float lambda_i = p.perp() * pow(p.delta_R(jet)/R, alpha);
           lambda += lambda_i/jet.perp();
         }
         return lambda;
@@ -131,12 +131,6 @@ namespace Rivet {
       else { // Fill negative value if untagged jet
         return -1e-3;
       }
-    }
-    
-    float deltaR(PseudoJet j1, PseudoJet j2) {
-      float deta = j1.eta() - j2.eta();
-      float dphi = j1.delta_phi_to(j2);
-      return sqrt(deta*deta + dphi*dphi);
     }
 
     /// Normalise histograms etc., after the run
